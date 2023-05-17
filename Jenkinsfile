@@ -17,8 +17,13 @@ podTemplate(label: 'builder',
             ]) {
     node('builder') {
         stage('Checkout') {
-            sh "ls"
-            sh "./gradlew clean build"
+            checkout scm
+        }
+
+        stage('Gradle Build') {
+            container('java') {
+                sh "./gradlew clean build"
+            }
         }
     }
 }

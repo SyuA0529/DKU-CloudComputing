@@ -1,6 +1,6 @@
 /* pipeline 변수 설정 */
-def DOCKER_IMAGE_NAME = "syua0529/CloudComputing"
-def NAMESPACE = "CloudComputing"
+def DOCKER_IMAGE_NAME = "syua0529/cloudcomputing"
+def NAMESPACE = "cloudcomputing"
 def VERSION = "${env.BUILD_NUMBER}"
 def DATE = new Date();
 

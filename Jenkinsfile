@@ -55,8 +55,9 @@ podTemplate(label: 'builder',
                     sh """
                         sed "\$(grep -n 'image:' ./k8s/deployment.yaml | grep -Eo '^[^:]+')s/cloudcomputing/cloudcomputing:${VERSION}/g" ./k8s/deployment.yaml
                     """
-                    sh "kubectl apply -f ./k8s/deployment.yaml -n ${NAMESPACE}"
-                    sh "kubectl apply -f ./k8s/service.yaml -n ${NAMESPACE}"
+                    sh "cat ./k8s/deployment.yaml"
+                    //sh "kubectl apply -f ./k8s/deployment.yaml -n ${NAMESPACE}"
+                    //sh "kubectl apply -f ./k8s/service.yaml -n ${NAMESPACE}"
                 }
             }
         }

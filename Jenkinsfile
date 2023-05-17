@@ -22,7 +22,7 @@ podTemplate(label: 'builder',
 
         stage('Gradle Build') {
             container('gradle') {
-                sh "gradle clean build"
+                sh "gradle clean build --info"
             }
         }
     }

@@ -19,7 +19,7 @@ podTemplate(label: 'builder',
         stage('Checkout') {
             checkout scm
             def lineNum = sh(encoding: 'UTF-8', returnStdout: true, script: "grep -n image: ./k8s/deployment.yaml | grep -Eo ^[^:]+")
-            sh "sed ${lineNum}s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
+            sh "sed -i ${lineNum}s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
         }
 
         // test and build project using gradle

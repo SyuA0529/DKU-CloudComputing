@@ -18,7 +18,7 @@ podTemplate(label: 'builder',
         // clone proejct
         stage('Checkout') {
             checkout scm
-            def lineNum = sh "grep -n image: ./k8s/deployment.yaml | grep -Eo ^[^:]+"
+            def lineNum = sh(encoding: 'UTF-8', returnStdout: true, script: "grep -n image: ./k8s/deployment.yaml | grep -Eo ^[^:]+")
             sh "sed ${lineNum}s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
         }
 

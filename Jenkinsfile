@@ -53,7 +53,7 @@ podTemplate(label: 'builder',
                 )]) {
                     sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
                     sh """
-                        sed "\$(grep -n 'image:' ./k8s/deployment.yaml | grep -Eo '^[^:]+')s/cloudcomputing/cloudcomputing:${VERSION}/g" ./k8s/deployment.yaml
+                        sed "\$(grep -n 'image:' ./k8s/deployment.yaml | grep -Eo '^[^:]+')s/cloudcomputing/cloudcomputing:${VERSION}/g" ./k8s/deployment.yaml > ./k8s/deployment.yaml
                     """
                     sh "cat ./k8s/deployment.yaml"
                     //sh "kubectl apply -f ./k8s/deployment.yaml -n ${NAMESPACE}"

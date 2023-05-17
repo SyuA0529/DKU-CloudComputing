@@ -44,18 +44,20 @@ podTemplate(label: 'builder',
             }
         }
 
-        // deploy project to kubernetes
-//         stage('Deploy') {
-//             container('kubectl') {
-//                 withCredentials([usernamePassword(
-//                     credentialsId: 'docker_hub_auth',
-//                     usernameVariable: 'USERNAME',
-//                     passwordVariable: 'PASSWORD'
-//                 ]) {
-//                     sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
-//                     sh "sed -i 's/변경전 내용/변경할 내용/g' ./k8s/k8s-deployment.yaml"
-//                 }
-//             }
-//         }
+        deploy project to kubernetes
+        stage('Deploy') {
+            container('kubectl') {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker_hub_auth',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                ]) {
+                    sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
+                    sh "sed -i 's/syua0529/cloudcomputing/syua0529/cloudcomputing:${VERSION}/g' ./k8s/k8s-deployment.yaml"
+                    sh "kubectl apply -f ./k8s/k8s-deployment.yaml -n ${NAMESPACE}"
+                    sh "kubectl apply -f ./k8s/k8s-service.yaml -n ${NAMESPACE}"
+                }
+            }
+        }
     }
 }

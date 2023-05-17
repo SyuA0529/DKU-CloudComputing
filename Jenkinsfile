@@ -1,7 +1,6 @@
 /* pipeline 변수 설정 */
-def DOCKER_IMAGE_NAME = "twofootdog/project-repo"           // 생성하는 Docker image 이름
-def DOCKER_IMAGE_TAGS = "batch-visualizer-auth"  // 생성하는 Docker image 태그
-def NAMESPACE = "ns-project"
+def DOCKER_IMAGE_NAME = "syua0529/CloudComputing"           // 생성하는 Docker image 이름
+def NAMESPACE = "CloudComputing"
 def VERSION = "${env.BUILD_NUMBER}"
 def DATE = new Date();
 
@@ -16,14 +15,45 @@ podTemplate(label: 'builder',
                 //hostPathVolume(mountPath: '/usr/bin/docker', hostPath: '/usr/bin/docker')
             ]) {
     node('builder') {
+        // clone proejct
         stage('Checkout') {
             checkout scm
         }
 
+        // test and build project using gradle
         stage('Gradle Build') {
             container('gradle') {
-                sh "gradle clean build --info"
+                sh "gradle -x test build"
             }
         }
+
+        // build docker image and push it to docker hub
+        stage('Docker build') {
+            container('docker') {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker_hub_auth',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
+                    sh "docker build -t $(DOCKER_IMAGE_NAME):$(VERSION) ."
+                    sh "docker login -u $(USERNAME) -p $(PASSWORD)"
+                    sh "docker push $(DOCKER_IMAGE_NAME):$(VERSION)"
+                }
+            }
+        }
+
+        // deploy project to kubernetes
+//         stage('Deploy') {
+//             container('kubectl') {
+//                 withCredentials([usernamePassword(
+//                     credentialsId: 'docker_hub_auth',
+//                     usernameVariable: 'USERNAME',
+//                     passwordVariable: 'PASSWORD'
+//                 ]) {
+//                     sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
+//                     sh "sed -i 's/변경전 내용/변경할 내용/g' ./k8s/k8s-deployment.yaml"
+//                 }
+//             }
+//         }
     }
 }

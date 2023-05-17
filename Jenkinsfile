@@ -19,7 +19,7 @@ podTemplate(label: 'builder',
         stage('Checkout') {
             checkout scm
             sh """
-                sed "\$(grep -n 'image:' ./k8s/deployment.yaml | grep -Eo '^[^:]+')s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml
+                sed "\$(grep -n 'image:' ./k8s/deployment.yaml | grep -Eo '^[^:]+')s/cloudcomputing/cloudcomputing:${VERSION}/g" ./k8s/deployment.yaml
             """
         }
         // test and build project using gradle

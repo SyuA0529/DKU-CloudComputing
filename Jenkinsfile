@@ -18,7 +18,7 @@ podTemplate(label: 'builder',
         // clone proejct
         stage('Checkout') {
             checkout scm
-            sh 'sed $(grep -n "image:" ./k8s/deployment.yaml | grep -Eo "^[^:]+")s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml'
+            sh "sed 17s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
             sh "car ./k8s/deployment.yaml"
         }
 

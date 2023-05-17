@@ -44,7 +44,7 @@ podTemplate(label: 'builder',
             }
         }
 
-        deploy project to kubernetes
+        // deploy project to kubernetes
         stage('Deploy') {
             container('kubectl') {
                 withCredentials([usernamePassword(

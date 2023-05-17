@@ -18,8 +18,8 @@ podTemplate(label: 'builder',
         // clone proejct
         stage('Checkout') {
             checkout scm
-            sh "sed 17s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
-            sh "car ./k8s/deployment.yaml"
+            def lineNum = sh "$(grep -n image: ./k8s/deployment.yaml | grep -Eo ^[^:]+)"
+            sh "sed ${lineNum}s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml"
         }
 
         // test and build project using gradle

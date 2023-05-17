@@ -37,6 +37,8 @@ podTemplate(label: 'builder',
                 )]) {
                     sh 'docker build -t $(DOCKER_IMAGE_NAME):$(VERSION) .'
                     sh 'docker login -u $(USERNAME) -p $(PASSWORD)'
+                    sh 'echo $(USERNAME)'
+                    sh 'echo $(PASSWORD)'
                     sh 'docker push $(DOCKER_IMAGE_NAME):$(VERSION)'
                 }
             }

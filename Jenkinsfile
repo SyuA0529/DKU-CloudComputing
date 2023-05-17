@@ -7,7 +7,7 @@ def DATE = new Date();
 
 podTemplate(label: 'builder',
             containers: [
-                containerTemplate(name: 'java', image: 'openjdk:17-alpine', command: 'cat', ttyEnabled: true),
+                containerTemplate(name: 'gradle', image: 'gradle:7.6.1-jdk17-alpine', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.23.0', command: 'cat', ttyEnabled: true)
             ],
@@ -21,9 +21,8 @@ podTemplate(label: 'builder',
         }
 
         stage('Gradle Build') {
-            container('java') {
-                sh "chmod +x ./gradlew"
-                sh "./gradlew clean build"
+            container('gradle') {
+                sh "gradle clean build"
             }
         }
     }

@@ -1,5 +1,5 @@
 /* pipeline 변수 설정 */
-def DOCKER_IMAGE_NAME = "syua0529/CloudComputing"           // 생성하는 Docker image 이름
+def DOCKER_IMAGE_NAME = "syua0529/CloudComputing"
 def NAMESPACE = "CloudComputing"
 def VERSION = "${env.BUILD_NUMBER}"
 def DATE = new Date();
@@ -35,11 +35,11 @@ podTemplate(label: 'builder',
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    sh 'docker build -t $(DOCKER_IMAGE_NAME):$(VERSION) .'
-                    sh 'docker login -u $(USERNAME) -p $(PASSWORD)'
-                    sh 'echo $(USERNAME)'
-                    sh 'echo $(PASSWORD)'
-                    sh 'docker push $(DOCKER_IMAGE_NAME):$(VERSION)'
+                    sh "echo $(USERNAME)"
+                    sh "echo $(PASSWORD)"
+                    sh "docker build -t $(DOCKER_IMAGE_NAME):$(VERSION) ."
+                    sh "docker login -u $(USERNAME) -p $(PASSWORD)"
+                    sh "docker push $(DOCKER_IMAGE_NAME):$(VERSION)"
                 }
             }
         }

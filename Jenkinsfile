@@ -51,7 +51,7 @@ podTemplate(label: 'builder',
                     credentialsId: 'docker_hub_auth',
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
-                ]) {
+                )]) {
                     sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
                     sh "sed -i 's/syua0529/cloudcomputing/syua0529/cloudcomputing:${VERSION}/g' ./k8s/k8s-deployment.yaml"
                     sh "kubectl apply -f ./k8s/k8s-deployment.yaml -n ${NAMESPACE}"

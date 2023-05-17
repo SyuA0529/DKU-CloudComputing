@@ -22,6 +22,7 @@ podTemplate(label: 'builder',
 
         stage('Gradle Build') {
             container('java') {
+                sh "chmod +x ./gradlew"
                 sh "./gradlew clean build"
             }
         }

@@ -18,46 +18,46 @@ podTemplate(label: 'builder',
         // clone proejct
         stage('Checkout') {
             checkout scm
+            sh 'sed $(grep -n "image:" ./k8s/deployment.yaml | grep -Eo "^[^:]+")s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml'
+            sh "car ./k8s/deployment.yaml"
         }
 
         // test and build project using gradle
-        stage('Gradle Build') {
-            container('gradle') {
-                sh "gradle -x test build"
-            }
-        }
+//         stage('Gradle Build') {
+//             container('gradle') {
+//                 sh "gradle -x test build"
+//             }
+//         }
 
         // build docker image and push it to docker hub
-        stage('Docker build') {
-            container('docker') {
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker_hub_auth',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    sh 'echo ${USERNAME}'
-                    sh 'echo ${PASSWORD}'
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} ."
-                    sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                    sh "docker push ${DOCKER_IMAGE_NAME}:${VERSION}"
-                }
-            }
-        }
+//         stage('Docker build') {
+//             container('docker') {
+//                 withCredentials([usernamePassword(
+//                     credentialsId: 'docker_hub_auth',
+//                     usernameVariable: 'USERNAME',
+//                     passwordVariable: 'PASSWORD'
+//                 )]) {
+//                     sh "docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} ."
+//                     sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+//                     sh "docker push ${DOCKER_IMAGE_NAME}:${VERSION}"
+//                 }
+//             }
+//         }
 
         // deploy project to kubernetes
-        stage('Deploy') {
-            container('kubectl') {
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker_hub_auth',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
-                    sh 'sed $(grep -n "image:" ./k8s/deployment.yaml | grep -Eo "^[^:]+")s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml'
-                    sh "kubectl apply -f ./k8s/deployment.yaml -n ${NAMESPACE}"
-                    sh "kubectl apply -f ./k8s/service.yaml -n ${NAMESPACE}"
-                }
-            }
-        }
+//         stage('Deploy') {
+//             container('kubectl') {
+//                 withCredentials([usernamePassword(
+//                     credentialsId: 'docker_hub_auth',
+//                     usernameVariable: 'USERNAME',
+//                     passwordVariable: 'PASSWORD'
+//                 )]) {
+//                     sh "kubectl get ns ${NAMESPACE}|| kubectl create ns ${NAMESPACE}"
+//                     sh 'sed $(grep -n "image:" ./k8s/deployment.yaml | grep -Eo "^[^:]+")s/cloudcomputing/cloudcomputing:${VERSION}/g ./k8s/deployment.yaml'
+//                     sh "kubectl apply -f ./k8s/deployment.yaml -n ${NAMESPACE}"
+//                     sh "kubectl apply -f ./k8s/service.yaml -n ${NAMESPACE}"
+//                 }
+//             }
+//         }
     }
 }

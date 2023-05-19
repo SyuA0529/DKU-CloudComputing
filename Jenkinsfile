@@ -19,15 +19,9 @@ podTemplate(label: 'builder',
         }
 
         // test project using gradle
-        stage('Gradle Test') {
+        stage('Gradle Test and Build') {
             container('gradle') {
-                sh "gradle test"
-            }
-        }
-
-        stage('Gradle Build') {
-            container('gradle') {
-                sh "grade build -x test"
+                sh "gradle clean build"
             }
         }
 

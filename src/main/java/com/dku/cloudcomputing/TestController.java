@@ -10,6 +10,6 @@ public class TestController {
     @GetMapping("/**")
     @ResponseBody
     public String main() {
-        return "version 1";
+        return "version 2";
     }
 }

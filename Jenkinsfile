@@ -1,8 +1,6 @@
-/* pipeline 변수 설정 */
 def DOCKER_IMAGE_NAME = "syua0529/cloudcomputing"
 def NAMESPACE = "cloudcomputing"
 def VERSION = "${env.BUILD_NUMBER}"
-def DATE = new Date();
 
 podTemplate(label: 'builder',
             containers: [
@@ -12,7 +10,6 @@ podTemplate(label: 'builder',
             ],
             volumes: [
                 hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-                //hostPathVolume(mountPath: '/usr/bin/docker', hostPath: '/usr/bin/docker')
             ]) {
     node('builder') {
         // clone proejct
@@ -21,15 +18,21 @@ podTemplate(label: 'builder',
 
         }
 
-        // test and build project using gradle
+        // test project using gradle
+        stage('Gradle Test') {
+            container('gradle') {
+                sh "gradle test"
+            }
+        }
+
         stage('Gradle Build') {
             container('gradle') {
-                sh "gradle -x test build"
+                sh "grade build -x test"
             }
         }
 
         // build docker image and push it to docker hub
-        stage('Docker build') {
+        stage('Docker Build') {
             container('docker') {
                 withCredentials([usernamePassword(
                     credentialsId: 'docker_hub_auth',
